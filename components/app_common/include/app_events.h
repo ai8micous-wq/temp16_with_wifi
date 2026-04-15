@@ -1,0 +1,12 @@
+#pragma once
+#include "esp_event.h"
+
+ESP_EVENT_DECLARE_BASE(APP_EVENT);
+
+typedef enum {
+    APP_EVENT_SAMPLE_READY = 1,
+    APP_EVENT_CONFIG_CHANGED,
+    APP_EVENT_TIME_SYNC_NEEDED,
+    APP_EVENT_FORCE_REPORT,
+    APP_EVENT_FACTORY_RESET,
+} app_event_id_t;
