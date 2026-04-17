@@ -1,0 +1,2 @@
+source /home/micous/esp/tempon16/temp16_with_wifi/build/bootloader/gdbinit/symbols
+source /home/micous/esp/tempon16/temp16_with_wifi/build/bootloader/gdbinit/connect
