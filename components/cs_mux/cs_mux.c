@@ -1,7 +1,14 @@
 #include "cs_mux.h"
+#include "board.h"
 #include "driver/gpio.h"
 
-static const gpio_num_t s_sel_pins[5] = {GPIO_NUM_10, GPIO_NUM_1, GPIO_NUM_0, GPIO_NUM_3, GPIO_NUM_5};
+static const gpio_num_t s_sel_pins[5] = {
+    BOARD_GPIO_MAX31856_MUX_A0,
+    BOARD_GPIO_MAX31856_MUX_A1,
+    BOARD_GPIO_MAX31856_MUX_A2,
+    BOARD_GPIO_MAX31856_MUX_A3,
+    BOARD_GPIO_MAX31856_MUX_EN,
+};
 
 static void write_bits(uint8_t channel, bool disable_all)
 {
@@ -15,8 +22,11 @@ esp_err_t cs_mux_init(void)
 {
     gpio_config_t io = {
         .mode = GPIO_MODE_OUTPUT,
-        .pin_bit_mask = (1ULL << GPIO_NUM_10) | (1ULL << GPIO_NUM_1) | (1ULL << GPIO_NUM_0) |
-                         (1ULL << GPIO_NUM_3) | (1ULL << GPIO_NUM_5),
+        .pin_bit_mask = (1ULL << BOARD_GPIO_MAX31856_MUX_A0) |
+                        (1ULL << BOARD_GPIO_MAX31856_MUX_A1) |
+                        (1ULL << BOARD_GPIO_MAX31856_MUX_A2) |
+                        (1ULL << BOARD_GPIO_MAX31856_MUX_A3) |
+                        (1ULL << BOARD_GPIO_MAX31856_MUX_EN),
     };
     ESP_ERROR_CHECK(gpio_config(&io));
     return cs_mux_deselect_all();

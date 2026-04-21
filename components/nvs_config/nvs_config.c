@@ -3,6 +3,7 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "app_config.h"
+#include "factory_info.h"
 
 #define NS_SYS    "sys"
 #define NS_LABEL  "label"
@@ -18,8 +19,20 @@ static void set_defaults(system_config_t *sys, channel_label_t labels[APP_CHANNE
     strlcpy(sys->mqtt_pass, APP_MQTT_DEFAULT_PASS, sizeof(sys->mqtt_pass));
     sys->report_interval_s = 1;
     sys->time_sync_interval_s = APP_TIME_SYNC_INTERVAL_S;
+
+    if (factory_info_has_valid_record()) {
+        const factory_info_record_t *factory = factory_info_get();
+        if (factory->device_id[0] != '\0') {
+            strlcpy(sys->device_id, factory->device_id, sizeof(sys->device_id));
+        }
+        if (factory->device_name[0] != '\0') {
+            strlcpy(sys->device_name, factory->device_name, sizeof(sys->device_name));
+        }
+    }
+
     for (int i = 0; i < APP_CHANNEL_COUNT; ++i) {
         snprintf(labels[i].label, sizeof(labels[i].label), "CH%d", i + 1);
+        alarms[i].enabled = CH_STATUS_ENABLED;
         alarms[i].alarm_en = false;
         alarms[i].high_x10 = 0;
         alarms[i].low_x10 = 0;
@@ -80,5 +93,5 @@ esp_err_t nvs_config_save_all(const system_config_t *sys, const channel_label_t 
 
 esp_err_t nvs_config_factory_reset(void)
 {
-    return nvs_flash_erase();
+    return nvs_flash_erase_partition("nvs");
 }

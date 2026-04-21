@@ -18,6 +18,7 @@ typedef enum {
 } channel_enable_t;
 
 typedef struct {
+    channel_enable_t enabled;
     bool alarm_en;
     int16_t high_x10;
     int16_t low_x10;
